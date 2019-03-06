@@ -21,5 +21,18 @@
         <context>colorPickMacro</context>
     </web-resource>
 
+    <xhtml-macro name="ColorPick" class="com.atlassian.tutorial.macro.colorPick" key='colorPick-macro'>
+        <description key="colorPick.macro.desc"/>
+        <category name="formatting"/>
+        <parameters>
+            <parameter name="Name" type="string" />
+            <parameter name="Color" type="enum">
+                <value name="red"/>
+                <value name="green"/>
+                <value name="blue"/>
+            </parameter>>
+        </parameters>
+
+    </xhtml-macro>
 
 </atlassian-plugin>
