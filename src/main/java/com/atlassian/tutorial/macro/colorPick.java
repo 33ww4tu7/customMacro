@@ -8,7 +8,6 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.webresource.api.assembler.PageBuilderService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 import java.util.Map;
 
 @Scanned
@@ -23,15 +22,7 @@ public class colorPick implements Macro {
 
     public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
         pageBuilderService.assembler().resources().requireWebResource("com.atlassian.tutorial.colorPickMacro:colorPickMacro-resources");
-        String output = "<div class =\"helloworld\">";
-        output = output + "<div class = \"" + map.get("Color") + "\">";
-        if (map.get("Name") != null) {
-            output = output + ("<h1>Hello " + map.get("Name") + "!</h1>");
-        } else {
-            output = output + "<h1>Hello World!<h1>";
-        }
-        output = output + "</div>" + "</div>";
-        return output;
+        return "<style> .wiki-content { background:" + map.get("Color") + ";}</style>";
     }
 
     public BodyType getBodyType() {
