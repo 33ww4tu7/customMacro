@@ -22,7 +22,11 @@ public class colorPick implements Macro {
 
     public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
         pageBuilderService.assembler().resources().requireWebResource("com.atlassian.tutorial.colorPickMacro:colorPickMacro-resources");
-        return "<style> .wiki-content { background:" + map.get("Color") + ";}</style>";
+        String output="";
+        output = output +"<style> .wiki-content{ background-image: url(" + map.get("Name") + ");" +
+                "opacity:" + map.get("Alpha") + ";}</style>";
+        output = output + "<style>.wiki-content p{ opacity: 1!important; }</style>";
+        return output;
     }
 
     public BodyType getBodyType() {

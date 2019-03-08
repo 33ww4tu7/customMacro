@@ -26,6 +26,7 @@
         <category name="formatting"/>
         <parameters>
             <parameter name="Name" type="string" />
+            <parameter name="Alpha" type="string" default="1"/>
             <parameter name="Color" type="enum">
                 <value name="red"/>
                 <value name="green"/>
