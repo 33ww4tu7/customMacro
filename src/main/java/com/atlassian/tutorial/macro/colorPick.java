@@ -3,6 +3,8 @@ package com.atlassian.tutorial.macro;
 import com.atlassian.confluence.content.render.xhtml.ConversionContext;
 import com.atlassian.confluence.macro.Macro;
 import com.atlassian.confluence.macro.MacroExecutionException;
+import com.atlassian.confluence.renderer.radeox.macros.MacroUtils;
+import com.atlassian.confluence.util.velocity.VelocityUtils;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.webresource.api.assembler.PageBuilderService;
@@ -22,11 +24,14 @@ public class colorPick implements Macro {
 
     public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
         pageBuilderService.assembler().resources().requireWebResource("com.atlassian.tutorial.colorPickMacro:colorPickMacro-resources");
-        String output="";
-        output = output +"<style> .wiki-content{ background-image: url(" + map.get("Name") + ");" +
-                "opacity:" + map.get("Alpha") + ";}</style>";
-        output = output + "<style>.wiki-content p{ opacity: 1!important; }</style>";
-        return output;
+        String imageLink = map.get("Name");
+        String Alpha = "1";
+        if (map.get("Alpha")!= null)
+            Alpha = map.get("Alpha");
+        Map context = MacroUtils.defaultVelocityContext();
+        context.put("link", imageLink);
+        context.put("opacity", Alpha);
+        return VelocityUtils.getRenderedTemplate("templates/content.vm", context);
     }
 
     public BodyType getBodyType() {

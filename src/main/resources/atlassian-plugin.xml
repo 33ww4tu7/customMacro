@@ -16,22 +16,19 @@
         
         <resource type="download" name="colorPickMacro.css" location="/css/colorPickMacro.css"/>
         <resource type="download" name="colorPickMacro.js" location="/js/colorPickMacro.js"/>
-        <resource type="download" name="images/" location="/images"/>
+        <resource type="download" name="images/" location="/images/pluginIcon.png"/>
 
         <context>colorPickMacro</context>
+        <context>viewcontent</context>
+        <context>preview</context>
     </web-resource>
 
     <xhtml-macro name="ColorPick" class="com.atlassian.tutorial.macro.colorPick" key='colorPick-macro'>
         <description key="colorPick.macro.desc"/>
         <category name="formatting"/>
         <parameters>
-            <parameter name="Name" type="string" />
-            <parameter name="Alpha" type="string" default="1"/>
-            <parameter name="Color" type="enum">
-                <value name="red"/>
-                <value name="green"/>
-                <value name="blue"/>
-            </parameter>>
+            <parameter name="Name" type="string" required="true"/>
+            <parameter name="Alpha" type="string"/>
         </parameters>
 
     </xhtml-macro>
