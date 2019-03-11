@@ -19,7 +19,6 @@
         <resource type="download" name="images/" location="/images/pluginIcon.png"/>
 
         <context>colorPickMacro</context>
-        <context>viewcontent</context>
         <context>preview</context>
     </web-resource>
 
