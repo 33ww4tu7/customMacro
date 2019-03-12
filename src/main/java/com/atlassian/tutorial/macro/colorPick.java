@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
+import static com.atlassian.confluence.user.AuthenticatedUserThreadLocal.getUsername;
+
 @Scanned
 public class colorPick implements Macro {
 
@@ -32,10 +34,11 @@ public class colorPick implements Macro {
                 Alpha = map.get("Alpha");
             context.put("link", imageLink);
             context.put("opacity", Alpha);
-            return VelocityUtils.getRenderedTemplate("templates/content.vm", context);
+            context.put("user", getUsername());
+            return VelocityUtils.getRenderedTemplate("templates/content", context);
         } catch (NumberFormatException e) {
             context.put("opacity", "1");
-            return VelocityUtils.getRenderedTemplate("templates/content.vm", context);
+            return VelocityUtils.getRenderedTemplate("templates/content", context);
         }
 
     }
