@@ -1,6 +1,0 @@
-<style>
-.wiki-content:not(p){
-    background-image: url($!{link});
-    opacity: $!{opacity};
-}
-</style>
