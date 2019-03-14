@@ -1,12 +1,7 @@
 <div class="field-group">
     <label for="ffi1">Fancy File Input</label>
     <label class="ffi" data-ffi-button-text="Browse">
-        <input type="file" id="ffi1" name="ffi1" aria-label="Fancy File Input" onchange="updateImage(this);">
+        <input type="file" id="ffi1" name="ffi1" aria-label="Fancy File Input" onchange="updateImage(this, $!{pageId})">
     </label>
 </div>
-<style>
-    .wiki-content:not(p) {
-        background-image: url($!{link});
-        opacity: 1;
-    }
-</style>
+<p>$!{pageId}</p>
