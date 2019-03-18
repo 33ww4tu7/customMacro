@@ -31,7 +31,7 @@ function updateImage(input, userID, pageID) {
             lastImage = alldata[alldata.length - 1];
             link = lastImage._links.download;
             fullpath = "http://localhost:1990/confluence" + link;
-            $('#main').css({"background-image": "url("+fullpath+')'});
+            $('#main').css({"background-image": "url(" + fullpath + ')'});
             alert(link);
             uploadDB(fullpath, pageID, userID)
         }],
@@ -45,7 +45,6 @@ function uploadDB(fullpath, pageID, userID) {
     AJS.$.ajax({
         url: 'http://localhost:1990/confluence/rest/myrestresource/1.0/message/set/' + pageID + '/' + userID,
         type: "GET",
-        dataType: "xml",
         headers: {
             "path": fullpath
         },
@@ -58,20 +57,18 @@ function uploadDB(fullpath, pageID, userID) {
     })
 }
 
-/*function getPath(pageID, userID) {
+function getImage(pageID, userID) {
     AJS.$.ajax({
         url: 'http://localhost:1990/confluence/rest/myrestresource/1.0/message/' + pageID + '/' + userID,
         type: "GET",
-        dataType: "xml",
-        success: [function (){
-                xmlDoc = $.parseXML("xml"),
-                $xml = $(xmlDoc),
-                $path = $xml.find("url");
-                alert($path);
+        dataType: "json",
+        success: [function (content) {
+            $('#main').css({"background-image": "url(" + content.path + ')'})
         }],
         error: [function () {
-            alert("fuck")
+            alert("second fuck");
         }]
+
     })
-}*/
+}
 

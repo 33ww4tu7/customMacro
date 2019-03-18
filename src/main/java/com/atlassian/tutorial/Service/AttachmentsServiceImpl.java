@@ -37,13 +37,14 @@ public class AttachmentsServiceImpl implements AttachmentsService {
     }
 
     @Override
-    public ArrayList<String> getUrl(String pageId, String userId) {
+    public String getUrl(String pageId, String userId) {
         ArrayList<String> pathList = newArrayList();
+        String path = "";
         AttachmentsEntity[] attachmentsEntity = ao.find(AttachmentsEntity.class, Query.select().where("PAGE_ID = ? AND USER_ID = ?", pageId, userId));
         for (AttachmentsEntity ae : attachmentsEntity) {
-            pathList.add(ae.getPath());
+            path = ae.getPath();
         }
-        return pathList;
+        return path;
     }
 
     public List<AttachmentsEntity> getAll() {
