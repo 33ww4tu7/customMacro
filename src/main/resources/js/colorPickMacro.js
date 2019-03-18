@@ -10,12 +10,12 @@ function updateImage(input, userID, pageID) {
     file = input.files[0];
     fileName = input.files[0].name;
     console.log(file);
-    var actionData=new FormData();
+    var actionData = new FormData();
     actionData.append('file', file);
     actionData.append('comment', "foobar");
     actionData.append('minorEdit', "true");
     AJS.$.ajax({
-        url: 'http://localhost:1990/confluence/rest/api/content/'+pageID+'/child/attachment',
+        url: 'http://localhost:1990/confluence/rest/api/content/' + pageID + '/child/attachment',
         type: "POST",
         data: actionData,
         dataType: "json",
@@ -25,19 +25,39 @@ function updateImage(input, userID, pageID) {
         },
         contentType: false,
         cache: false,
-        success: [function (content){
-           // var res = JSON.parse(dataType.Response);
+        success: [function (content) {
+            // var res = JSON.parse(dataType.Response);
             alldata = content.results;
-            lastImage = alldata[alldata.length-1];
+            lastImage = alldata[alldata.length - 1];
             link = lastImage._links.download;
-            $('#main').css({"background-image": "url(http://localhost:1990/confluence" + link});
-            alert(link)
+            fullpath = "http://localhost:1990/confluence" + link;
+            $('#main').css({"background-image": "url("+fullpath+')'});
+            alert(link);
+            uploadDB(fullpath, pageID, userID)
         }],
         error: [function () {
             alert("fuck")
         }]
     })
 }
+
+function uploadDB(fullpath, pageID, userID) {
+    AJS.$.ajax({
+        url: 'http://localhost:1990/confluence/rest/myrestresource/1.0/message/set/' + pageID + '/' + userID,
+        type: "GET",
+        dataType: "xml",
+        headers: {
+            "path": fullpath
+        },
+        success: [function () {
+            alert("great!")
+        }],
+        error: [[function () {
+            alert("second fuck");
+        }]]
+    })
+}
+
 /*function getPath(pageID, userID) {
     AJS.$.ajax({
         url: 'http://localhost:1990/confluence/rest/myrestresource/1.0/message/' + pageID + '/' + userID,
