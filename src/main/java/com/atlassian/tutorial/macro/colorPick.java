@@ -1,6 +1,7 @@
 package com.atlassian.tutorial.macro;
 
 import com.atlassian.confluence.content.render.xhtml.ConversionContext;
+import com.atlassian.confluence.core.ContentEntityObject;
 import com.atlassian.confluence.macro.Macro;
 import com.atlassian.confluence.macro.MacroExecutionException;
 import com.atlassian.confluence.renderer.radeox.macros.MacroUtils;
@@ -26,15 +27,19 @@ public class colorPick implements Macro {
 
     public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
         pageBuilderService.assembler().resources().requireWebResource("com.atlassian.tutorial.colorPickMacro:colorPickMacro-resources");
+
+        ContentEntityObject contentEntityObject = conversionContext.getEntity();;
+        String idAsString = contentEntityObject.getIdAsString();
         String imageLink = map.get("Name");
         Map context = MacroUtils.defaultVelocityContext();
         String Alpha = "1";
         try {
-            if ((map.get("Alpha") != null) || (Integer.parseInt(map.get("Alpha")) <= 1))
+            if ((map.get("Alpha") != null) || idAsString != null)
                 Alpha = map.get("Alpha");
             context.put("link", imageLink);
             context.put("opacity", Alpha);
-            context.put("user", getUsername());
+            context.put("userID", getUsername());
+            context.put("pageID", idAsString);
             return VelocityUtils.getRenderedTemplate("templates/content", context);
         } catch (NumberFormatException e) {
             context.put("opacity", "1");

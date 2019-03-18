@@ -12,11 +12,11 @@
   <resource type="i18n" name="i18n" location="colorPickMacro"/>  
   <!-- add our web resources -->  
   <web-resource key="colorPickMacro-resources" name="colorPickMacro Web Resources"> 
-    <dependency>com.atlassian.auiplugin:ajs</dependency>
-    <dependency>com.atlassian.auiplugin:fancy-file-input</dependency>
-    <resource type="download" name="colorPickMacro.css" location="/css/colorPickMacro.css"/>
-    <resource type="download" name="colorPickMacro.js" location="/js/colorPickMacro.js"/>
-    <resource type="download" name="imageUpload.js" location="/js/imageUpload.js"/>
+    <dependency>com.atlassian.auiplugin:ajs</dependency>  
+    <dependency>com.atlassian.auiplugin:fancy-file-input</dependency>  
+    <resource type="download" name="colorPickMacro.css" location="/css/colorPickMacro.css"/>  
+    <resource type="download" name="colorPickMacro.js" location="/js/colorPickMacro.js"/>  
+    <resource type="download" name="imageUpload.js" location="/js/imageUpload.js"/>  
     <resource type="download" name="images/" location="/images/pluginIcon.png"/>  
     <context>colorPickMacro</context>  
     <context>preview</context> 
@@ -26,7 +26,13 @@
     <category name="formatting"/>  
     <parameters> 
       <parameter name="Name" type="string" required="true"/>  
-      <parameter name="Alpha" type="string"/>
+      <parameter name="Alpha" type="string"/> 
     </parameters> 
-  </xhtml-macro>
+  </xhtml-macro>  
+  <rest name="My Rest Resource" i18n-name-key="my-rest-resource.name" key="my-rest-resource" path="/myrestresource" version="1.0"> 
+    <description key="my-rest-resource.description">The My Rest Resource Plugin</description> 
+  </rest>
+  <ao key="ao-module">
+    <entity>com.atlassian.tutorial.entity.AttachmentsEntity</entity>
+  </ao>
 </atlassian-plugin>
