@@ -9,7 +9,6 @@ import net.java.ao.Query;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -38,7 +37,6 @@ public class AttachmentsServiceImpl implements AttachmentsService {
 
     @Override
     public String getUrl(String pageId, String userId) {
-        ArrayList<String> pathList = newArrayList();
         String path = "";
         AttachmentsEntity[] attachmentsEntity = ao.find(AttachmentsEntity.class, Query.select().where("PAGE_ID = ? AND USER_ID = ?", pageId, userId));
         for (AttachmentsEntity ae : attachmentsEntity) {

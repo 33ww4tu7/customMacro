@@ -23,11 +23,10 @@
   </web-resource>  
   <xhtml-macro name="ColorPick" class="com.atlassian.tutorial.macro.colorPick" key="colorPick-macro"> 
     <description key="colorPick.macro.desc"/>  
-    <category name="formatting"/>  
-    <parameters> 
-      <parameter name="Name" type="string" required="true"/>  
-      <parameter name="Alpha" type="string"/> 
-    </parameters> 
+    <category name="formatting"/>
+    <parameters>
+      <parameter name="Name" type="string"/>
+    </parameters>
   </xhtml-macro>  
   <rest name="My Rest Resource" i18n-name-key="my-rest-resource.name" key="my-rest-resource" path="/myrestresource" version="1.0"> 
     <description key="my-rest-resource.description">The My Rest Resource Plugin</description> 
