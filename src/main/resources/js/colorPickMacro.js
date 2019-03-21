@@ -2,6 +2,9 @@ AJS.$(function () {
     AJS.$('.ffi input[type="file"]').fancyFileInput();
 });
 
+baseUrl = AJS.params.baseUrl;
+pageID = AJS.params.pageId;
+
 function updateImage(file, uniquefilename) {
     file.name = uniquefilename;
     console.log(file);
@@ -9,8 +12,6 @@ function updateImage(file, uniquefilename) {
     actionData.append('file', file, uniquefilename);
     actionData.append('comment', "foobar");
     actionData.append('minorEdit', "true");
-    baseUrl = AJS.params.baseUrl;
-    pageID = AJS.params.pageId;
     AJS.$.ajax({
         url: baseUrl + '/rest/api/content/' + pageID + '/child/attachment',
         type: "POST",
@@ -27,19 +28,16 @@ function updateImage(file, uniquefilename) {
             lastImage = alldata[alldata.length - 1];
             link = lastImage._links.download;
             fullpath = baseUrl + link;
-            $('#main').css({"background-image": "url(" + fullpath + ')'});
-            alert(link);
+            setBackgroundImage(fullpath);
             uploadDB(fullpath)
         }],
         error: [function () {
-            alert("fuck")
+            console.log("error while creating attachment")
         }]
     })
 }
 
 function uploadDB(fullpath) {
-    baseUrl = AJS.params.baseUrl;
-    pageID = AJS.params.pageId;
     AJS.$.ajax({
         url: baseUrl + '/rest/myrestresource/1.0/message/' + pageID,
         type: "POST",
@@ -48,26 +46,23 @@ function uploadDB(fullpath) {
             "X-Atlassian-Token": "nocheck",
         },
         success: [function () {
-            alert("great!")
         }],
         error: [[function () {
-            alert("second fuck");
+            console.log("error while upload information")
         }]]
     })
 }
 
 AJS.toInit(function getImage() {
-    baseUrl = AJS.params.baseUrl;
-    pageID = AJS.params.pageId;
     AJS.$.ajax({
         url: baseUrl + '/rest/myrestresource/1.0/message/' + pageID,
         type: "GET",
         dataType: "json",
         success: [function (content) {
-            $('#main').css({"background-image": "url(" + content.path + ')'})
+            setBackgroundImage(content.path)
         }],
         error: [function () {
-            alert("second fuck");
+            console.log("error while downloading image")
         }]
 
     })
@@ -87,11 +82,14 @@ function generateUniqueFilname(input) {
         success: [function (uniqueFilename) {
             uniqueFilename += '.' + Extension;
             updateImage(file, uniqueFilename);
-            alert("nice")
         }],
         error: [function () {
-                alert("fuck:)")
+                console.log("error while generating filename")
         }]
     })
 }
 
+function setBackgroundImage(path) {
+    $('#main').append('<div class="background-image">');
+    $('.background-image').css({"background-image": "url(" + path + ')'});
+}
