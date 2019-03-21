@@ -28,25 +28,15 @@ public class colorPick implements Macro {
     public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
         pageBuilderService.assembler().resources().requireWebResource("com.atlassian.tutorial.colorPickMacro:colorPickMacro-resources");
 
-        ContentEntityObject contentEntityObject = conversionContext.getEntity();;
+        ContentEntityObject contentEntityObject = conversionContext.getEntity();
         String idAsString = contentEntityObject.getIdAsString();
-        String imageLink = map.get("Name");
         Map context = MacroUtils.defaultVelocityContext();
-        String Alpha = "1";
-        try {
-            if ((map.get("Alpha") != null) || idAsString != null)
-                Alpha = map.get("Alpha");
-            context.put("link", imageLink);
-            context.put("opacity", Alpha);
-            context.put("userID", getUsername());
-            context.put("pageID", idAsString);
-            return VelocityUtils.getRenderedTemplate("templates/content", context);
-        } catch (NumberFormatException e) {
-            context.put("opacity", "1");
-            return VelocityUtils.getRenderedTemplate("templates/content", context);
-        }
-
+        context.put("name", map.get("Name"));
+        context.put("userID", getUsername());
+        context.put("pageID", idAsString);
+        return VelocityUtils.getRenderedTemplate("templates/content", context);
     }
+
 
     public BodyType getBodyType() {
         return BodyType.NONE;

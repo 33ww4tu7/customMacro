@@ -1,0 +1,7 @@
+#main{
+    opa
+}
+
+#main>p {
+    opacity: 1!important;
+}

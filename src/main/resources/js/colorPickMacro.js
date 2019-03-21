@@ -1,21 +1,18 @@
 AJS.$(function () {
     AJS.$('.ffi input[type="file"]').fancyFileInput();
-    AJS.$('#comment-save-button').click(function () {
-        updateImage(" ");
-        return false;
-    });
 });
 
-function updateImage(input, userID, pageID) {
-    file = input.files[0];
-    fileName = input.files[0].name;
+function updateImage(file, uniquefilename) {
+    file.name = uniquefilename;
     console.log(file);
     var actionData = new FormData();
-    actionData.append('file', file);
+    actionData.append('file', file, uniquefilename);
     actionData.append('comment', "foobar");
     actionData.append('minorEdit', "true");
+    baseUrl = AJS.params.baseUrl;
+    pageID = AJS.params.pageId;
     AJS.$.ajax({
-        url: 'http://localhost:1990/confluence/rest/api/content/' + pageID + '/child/attachment',
+        url: baseUrl + '/rest/api/content/' + pageID + '/child/attachment',
         type: "POST",
         data: actionData,
         dataType: "json",
@@ -26,14 +23,13 @@ function updateImage(input, userID, pageID) {
         contentType: false,
         cache: false,
         success: [function (content) {
-            // var res = JSON.parse(dataType.Response);
             alldata = content.results;
             lastImage = alldata[alldata.length - 1];
             link = lastImage._links.download;
-            fullpath = "http://localhost:1990/confluence" + link;
+            fullpath = baseUrl + link;
             $('#main').css({"background-image": "url(" + fullpath + ')'});
             alert(link);
-            uploadDB(fullpath, pageID, userID)
+            uploadDB(fullpath)
         }],
         error: [function () {
             alert("fuck")
@@ -41,12 +37,15 @@ function updateImage(input, userID, pageID) {
     })
 }
 
-function uploadDB(fullpath, pageID, userID) {
+function uploadDB(fullpath) {
+    baseUrl = AJS.params.baseUrl;
+    pageID = AJS.params.pageId;
     AJS.$.ajax({
-        url: 'http://localhost:1990/confluence/rest/myrestresource/1.0/message/set/' + pageID + '/' + userID,
-        type: "GET",
+        url: baseUrl + '/rest/myrestresource/1.0/message/' + pageID,
+        type: "POST",
         headers: {
-            "path": fullpath
+            "path": fullpath,
+            "X-Atlassian-Token": "nocheck",
         },
         success: [function () {
             alert("great!")
@@ -57,9 +56,11 @@ function uploadDB(fullpath, pageID, userID) {
     })
 }
 
-function getImage(pageID, userID) {
+AJS.toInit(function getImage() {
+    baseUrl = AJS.params.baseUrl;
+    pageID = AJS.params.pageId;
     AJS.$.ajax({
-        url: 'http://localhost:1990/confluence/rest/myrestresource/1.0/message/' + pageID + '/' + userID,
+        url: baseUrl + '/rest/myrestresource/1.0/message/' + pageID,
         type: "GET",
         dataType: "json",
         success: [function (content) {
@@ -69,6 +70,28 @@ function getImage(pageID, userID) {
             alert("second fuck");
         }]
 
+    })
+});
+
+function generateUniqueFilname(input) {
+    file = input.files[0];
+    filename = input.files[0].name;
+    Extension = filename.split('.').pop();
+    AJS.$.ajax({
+        url: baseUrl + '/rest/myrestresource/1.0/message',
+        headers:{
+          "filename": file,
+        },
+        type: "GET",
+        dataType: "text",
+        success: [function (uniqueFilename) {
+            uniqueFilename += '.' + Extension;
+            updateImage(file, uniqueFilename);
+            alert("nice")
+        }],
+        error: [function () {
+                alert("fuck:)")
+        }]
     })
 }
 
