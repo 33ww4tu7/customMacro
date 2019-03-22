@@ -44,8 +44,4 @@ public class AttachmentsServiceImpl implements AttachmentsService {
         }
         return path;
     }
-
-    public List<AttachmentsEntity> getAll() {
-        return newArrayList(ao.find(AttachmentsEntity.class));
-    }
 }

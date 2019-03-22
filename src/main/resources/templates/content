@@ -1,6 +1,4 @@
 <div class="field-group">
-    <label class="ffi" data-ffi-button-text="Browse">
-        <input type="file" id="ffi1" title="ffi" name="ffi1" aria-label="UploadFile"
-               onchange="generateUniqueFilname(this);"/>
-    </label>
+    <button class="btn">Upload a file</button>
+    <input type="file" name="myfile" onchange="generateUniqueFilname(this);"/>
 </div>

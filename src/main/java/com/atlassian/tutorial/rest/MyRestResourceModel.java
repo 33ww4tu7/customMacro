@@ -17,7 +17,7 @@ public class MyRestResourceModel {
     public MyRestResourceModel() {
     }
 
-    public MyRestResourceModel(String path, String pageID,  String userID) {
+    public MyRestResourceModel(String path, String pageID, String userID) {
         this.userID = userID;
         this.pageID = pageID;
         this.path = path;

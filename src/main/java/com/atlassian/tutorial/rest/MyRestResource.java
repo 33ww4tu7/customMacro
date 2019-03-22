@@ -70,6 +70,6 @@ public class MyRestResource {
         SecureRandom random = new SecureRandom();
         byte[] key = new byte[4];
         random.nextBytes(key);
-        return HmacUtils.hmacMd5Hex(Arrays.toString(key),filename);
+        return HmacUtils.hmacMd5Hex(Arrays.toString(key), filename);
     }
 }

@@ -2,7 +2,6 @@
     z-index: 0;
     opacity: 0.4;
     min-width: 600px;
-    min-height: 800px;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -17,4 +16,28 @@
 }
 #main {
     z-index: 1;
+}
+
+
+.field-group {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.btn {
+    border: 2px solid gray;
+    color: gray;
+    background-color: white;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.field-group input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
 }

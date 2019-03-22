@@ -1,6 +1,5 @@
 package com.atlassian.tutorial.api;
 
-public interface MyPluginComponent
-{
+public interface MyPluginComponent {
     String getName();
 }

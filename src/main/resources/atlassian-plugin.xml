@@ -21,7 +21,7 @@
     <context>colorPickMacro</context>  
     <context>preview</context> 
   </web-resource>  
-  <xhtml-macro name="ColorPick" class="com.atlassian.tutorial.macro.colorPick" key="colorPick-macro"> 
+  <xhtml-macro name="ColorPick" class="com.atlassian.tutorial.macro.ColorPick" key="colorPick-macro">
     <description key="colorPick.macro.desc"/>  
     <category name="formatting"/>
     <parameters>

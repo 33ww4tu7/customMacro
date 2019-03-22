@@ -1,7 +1,3 @@
-AJS.$(function () {
-    AJS.$('.ffi input[type="file"]').fancyFileInput();
-});
-
 baseUrl = AJS.params.baseUrl;
 pageID = AJS.params.pageId;
 

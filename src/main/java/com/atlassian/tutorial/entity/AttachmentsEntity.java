@@ -13,5 +13,5 @@ public interface AttachmentsEntity extends Entity {
 
     String getUserId();
 
-    void setUserId(String UserId);
+    void setUserId(String userId);
 }

@@ -16,12 +16,14 @@ import java.util.Map;
 import static com.atlassian.confluence.user.AuthenticatedUserThreadLocal.getUsername;
 
 @Scanned
-public class colorPick implements Macro {
+public class ColorPick implements Macro {
 
-    private PageBuilderService pageBuilderService;
+    private final PageBuilderService pageBuilderService;
+
+    private final String name = "name";
 
     @Autowired
-    public colorPick(@ComponentImport PageBuilderService pageBuilderService) {
+    public ColorPick(@ComponentImport PageBuilderService pageBuilderService) {
         this.pageBuilderService = pageBuilderService;
     }
 
@@ -29,11 +31,8 @@ public class colorPick implements Macro {
         pageBuilderService.assembler().resources().requireWebResource("com.atlassian.tutorial.colorPickMacro:colorPickMacro-resources");
 
         ContentEntityObject contentEntityObject = conversionContext.getEntity();
-        String idAsString = contentEntityObject.getIdAsString();
         Map context = MacroUtils.defaultVelocityContext();
-        context.put("name", map.get("Name"));
-        context.put("userID", getUsername());
-        context.put("pageID", idAsString);
+        context.put(name, map.get("Name"));
         return VelocityUtils.getRenderedTemplate("templates/content", context);
     }
 
