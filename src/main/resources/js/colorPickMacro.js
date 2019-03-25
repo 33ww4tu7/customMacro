@@ -1,5 +1,5 @@
-baseUrl = AJS.params.baseUrl;
-pageID = AJS.params.pageId;
+const baseUrl = AJS.params.baseUrl;
+const pageID = AJS.params.pageId;
 
 function updateImage(file, uniquefilename) {
     file.name = uniquefilename;
@@ -35,7 +35,7 @@ function updateImage(file, uniquefilename) {
 
 function uploadDB(fullpath) {
     AJS.$.ajax({
-        url: baseUrl + '/rest/myrestresource/1.0/message/' + pageID,
+        url: baseUrl + '/rest/restresource/1.0/attach/' + pageID,
         type: "POST",
         headers: {
             "path": fullpath,
@@ -51,7 +51,7 @@ function uploadDB(fullpath) {
 
 AJS.toInit(function getImage() {
     AJS.$.ajax({
-        url: baseUrl + '/rest/myrestresource/1.0/message/' + pageID,
+        url: baseUrl + '/rest/restresource/1.0/attach/' + pageID,
         type: "GET",
         dataType: "json",
         success: [function (content) {
@@ -69,7 +69,7 @@ function generateUniqueFilname(input) {
     filename = input.files[0].name;
     Extension = filename.split('.').pop();
     AJS.$.ajax({
-        url: baseUrl + '/rest/myrestresource/1.0/message',
+        url: baseUrl + '/rest/restresource/1.0/attach',
         headers:{
           "filename": file,
         },

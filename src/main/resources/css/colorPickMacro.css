@@ -11,9 +11,6 @@
     background-repeat: no-repeat;
 }
 
-#ffi1 {
-    z-index: 1;
-}
 #main {
     z-index: 1;
 }
@@ -21,6 +18,10 @@
 
 .field-group {
     position: relative;
+    top: 15px;
+    left: 0;
+    right: 0;
+    bottom: 0;
     overflow: hidden;
     display: inline-block;
 }
@@ -40,4 +41,5 @@
     left: 0;
     top: 0;
     opacity: 0;
+    z-index: 1;
 }

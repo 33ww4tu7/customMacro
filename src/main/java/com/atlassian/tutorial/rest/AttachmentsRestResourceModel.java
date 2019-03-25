@@ -3,7 +3,7 @@ package com.atlassian.tutorial.rest;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class MyRestResourceModel {
+public class AttachmentsRestResourceModel {
 
     @JsonProperty
     private String path;
@@ -14,10 +14,10 @@ public class MyRestResourceModel {
     @JsonProperty
     private String userID;
 
-    public MyRestResourceModel() {
+    public AttachmentsRestResourceModel() {
     }
 
-    public MyRestResourceModel(String path, String pageID, String userID) {
+    public AttachmentsRestResourceModel(String path, String pageID, String userID) {
         this.userID = userID;
         this.pageID = pageID;
         this.path = path;

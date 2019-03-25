@@ -1,26 +1,23 @@
 package com.atlassian.tutorial.macro;
 
 import com.atlassian.confluence.content.render.xhtml.ConversionContext;
-import com.atlassian.confluence.core.ContentEntityObject;
 import com.atlassian.confluence.macro.Macro;
 import com.atlassian.confluence.macro.MacroExecutionException;
 import com.atlassian.confluence.renderer.radeox.macros.MacroUtils;
 import com.atlassian.confluence.util.velocity.VelocityUtils;
-import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.webresource.api.assembler.PageBuilderService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Named;
 import java.util.Map;
 
-import static com.atlassian.confluence.user.AuthenticatedUserThreadLocal.getUsername;
-
-@Scanned
+@Named
 public class ColorPick implements Macro {
 
     private final PageBuilderService pageBuilderService;
 
-    private final String name = "name";
+    private final static String name = "name";
 
     @Autowired
     public ColorPick(@ComponentImport PageBuilderService pageBuilderService) {
@@ -30,7 +27,6 @@ public class ColorPick implements Macro {
     public String execute(Map<String, String> map, String s, ConversionContext conversionContext) throws MacroExecutionException {
         pageBuilderService.assembler().resources().requireWebResource("com.atlassian.tutorial.colorPickMacro:colorPickMacro-resources");
 
-        ContentEntityObject contentEntityObject = conversionContext.getEntity();
         Map context = MacroUtils.defaultVelocityContext();
         context.put(name, map.get("Name"));
         return VelocityUtils.getRenderedTemplate("templates/content", context);
