@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Named
 public class AttachmentsServiceImpl implements AttachmentsService {
 
-    private static final String SQLQuery = "PAGE_ID = ? AND USER_ID = ?";
+    private static final String SQL_QUERY = "PAGE_ID = ? AND USER_ID = ?";
 
     @ComponentImport
     private final ActiveObjects ao;
@@ -25,7 +25,7 @@ public class AttachmentsServiceImpl implements AttachmentsService {
     }
 
     @Override
-    public final AttachmentsEntity add(String path, String pageId, String userId) {
+    public AttachmentsEntity add(final String path, final String pageId, final String userId) {
         final AttachmentsEntity attachmentsEntity = ao.create(AttachmentsEntity.class);
         attachmentsEntity.setPath(path);
         attachmentsEntity.setPageId(pageId);
@@ -35,8 +35,8 @@ public class AttachmentsServiceImpl implements AttachmentsService {
     }
 
     @Override
-    public final String getUrl(String pageId, String userId) {
-        AttachmentsEntity[] attachmentsEntity = ao.find(AttachmentsEntity.class, Query.select().where(SQLQuery, pageId, userId));
+    public String getUrl(final String pageId, final String userId) {
+        final AttachmentsEntity[] attachmentsEntity = ao.find(AttachmentsEntity.class, Query.select().where(SQL_QUERY, pageId, userId));
         return attachmentsEntity[attachmentsEntity.length - 1].getPath();
     }
 }
