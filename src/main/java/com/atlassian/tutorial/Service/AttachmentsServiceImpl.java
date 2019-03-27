@@ -1,6 +1,5 @@
 package com.atlassian.tutorial.Service;
 
-
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.tutorial.entity.AttachmentsEntity;

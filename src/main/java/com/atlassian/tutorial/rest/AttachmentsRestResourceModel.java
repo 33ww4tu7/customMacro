@@ -1,16 +1,13 @@
 package com.atlassian.tutorial.rest;
 
-
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class AttachmentsRestResourceModel {
 
     @JsonProperty
     private String path;
-
     @JsonProperty
     private String pageID;
-
     @JsonProperty
     private String userID;
 
@@ -30,7 +27,6 @@ public class AttachmentsRestResourceModel {
     public void setMessage(String path) {
         this.path = path;
     }
-
 
     public String getpageID() {
         return pageID;

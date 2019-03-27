@@ -17,12 +17,9 @@ import java.util.logging.Logger;
 import static com.atlassian.confluence.user.AuthenticatedUserThreadLocal.get;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-
 @Path("/attach")
 public class AttachmentsRestResource {
-
     private static final Logger log = Logger.getLogger(AttachmentsServiceImpl.class.getName());
-
     private final AttachmentsService attachmentsService;
 
     public AttachmentsRestResource(AttachmentsService attachmentsService) {
