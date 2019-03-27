@@ -19,16 +19,20 @@ public class ColorPick implements Macro {
 
     private final static String NAME = "Name";
 
+    private final static String TEMPLATE_NAME = "templates/content";
+
+    private final static String WEB_RESOURCE_NAME = "com.atlassian.tutorial.colorPickMacro:colorPickMacro-resources";
+
     @Autowired
     public ColorPick(@ComponentImport PageBuilderService pageBuilderService) {
         this.pageBuilderService = pageBuilderService;
     }
 
-     public String execute(final Map<String, String> map, final  String macroBody, final ConversionContext conversionContext) throws MacroExecutionException {
-        pageBuilderService.assembler().resources().requireWebResource("com.atlassian.tutorial.colorPickMacro:colorPickMacro-resources");
+    public String execute(final Map<String, String> map, final String macroBody, final ConversionContext conversionContext) throws MacroExecutionException {
+        pageBuilderService.assembler().resources().requireWebResource(WEB_RESOURCE_NAME);
         Map context = MacroUtils.defaultVelocityContext();
         context.put(NAME, map.get(NAME));
-        return VelocityUtils.getRenderedTemplate("templates/content", context);
+        return VelocityUtils.getRenderedTemplate(TEMPLATE_NAME, context);
     }
 
 

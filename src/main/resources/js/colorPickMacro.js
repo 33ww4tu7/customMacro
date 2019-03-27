@@ -1,11 +1,10 @@
 const baseUrl = AJS.params.baseUrl;
 const pageID = AJS.params.pageId;
 
-function updateImage(file, uniquefilename) {
-    file.name = uniquefilename;
+function updateImage(file, uniqueFilename) {
     console.log(file);
     var actionData = new FormData();
-    actionData.append('file', file, uniquefilename);
+    actionData.append('file', file, uniqueFilename);
     actionData.append('comment', "foobar");
     actionData.append('minorEdit', "true");
     AJS.$.ajax({
@@ -15,21 +14,21 @@ function updateImage(file, uniquefilename) {
         dataType: "json",
         processData: false,
         headers: {
-            "X-Atlassian-Token": "nocheck",
+            "X-Atlassian-Token": "nocheck"
         },
         contentType: false,
         cache: false,
-        success: [function (content) {
-            alldata = content.results;
-            lastImage = alldata[alldata.length - 1];
-            link = lastImage._links.download;
-            fullpath = baseUrl + link;
+        success: function (content) {
+            var alldata = content.results;
+            var lastImage = alldata[alldata.length - 1];
+            var link = lastImage._links.download;
+            var fullpath = baseUrl + link;
             setBackgroundImage(fullpath);
             uploadDB(fullpath)
-        }],
-        error: [function () {
+        },
+        error: function () {
             console.log("error while creating attachment")
-        }]
+        }
     })
 }
 
@@ -41,11 +40,9 @@ function uploadDB(fullpath) {
             "path": fullpath,
             "X-Atlassian-Token": "nocheck",
         },
-        success: [function () {
-        }],
-        error: [[function () {
+        error: function () {
             console.log("error while upload information")
-        }]]
+        }
     })
 }
 
@@ -54,34 +51,34 @@ AJS.toInit(function getImage() {
         url: baseUrl + '/rest/restresource/1.0/attach/' + pageID,
         type: "GET",
         dataType: "json",
-        success: [function (content) {
+        success: function (content) {
             setBackgroundImage(content.path)
-        }],
-        error: [function () {
+        },
+        error: function () {
             console.log("error while downloading image")
-        }]
+        }
 
     })
 });
 
 function generateUniqueFilname(input) {
-    file = input.files[0];
-    filename = input.files[0].name;
-    Extension = filename.split('.').pop();
+    var file = input.files[0];
+    var filename = input.files[0].name;
+    var extension = filename.split('.').pop();
     AJS.$.ajax({
         url: baseUrl + '/rest/restresource/1.0/attach',
         headers:{
-          "filename": file,
+          "filename": file
         },
         type: "GET",
         dataType: "text",
-        success: [function (uniqueFilename) {
-            uniqueFilename += '.' + Extension;
+        success: function (uniqueFilename) {
+            uniqueFilename += '.' + extension;
             updateImage(file, uniqueFilename);
-        }],
-        error: [function () {
+        },
+        error: function () {
                 console.log("error while generating filename")
-        }]
+        }
     })
 }
 

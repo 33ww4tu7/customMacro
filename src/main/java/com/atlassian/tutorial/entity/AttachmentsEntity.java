@@ -1,7 +1,9 @@
 package com.atlassian.tutorial.entity;
 
 import net.java.ao.Entity;
+import net.java.ao.Preload;
 
+@Preload
 public interface AttachmentsEntity extends Entity {
     String getPath();
 
