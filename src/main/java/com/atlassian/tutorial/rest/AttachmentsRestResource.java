@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @Path("/attach")
 public class AttachmentsRestResource {
-    private static final Logger log = Logger.getLogger(AttachmentsServiceImpl.class.getName());
+    private static final Logger log = Logger.getLogger(AttachmentsRestResource.class.getName());
     private final AttachmentsService attachmentsService;
 
     public AttachmentsRestResource(AttachmentsService attachmentsService) {
@@ -33,7 +33,7 @@ public class AttachmentsRestResource {
         final ConfluenceUser confluenceUser = get();
         final String userKey = confluenceUser.getKey().toString();
         try {
-            attachmentsService.add(path, pageId, userKey);
+            attachmentsService.createOrUpload(path, pageId, userKey);
             return Response.ok().build();
         } catch (SQLException e) {
             log.info(e.getMessage());
@@ -48,7 +48,7 @@ public class AttachmentsRestResource {
         final ConfluenceUser confluenceUser = get();
         final String userKey = confluenceUser.getKey().toString();
         try {
-            return Response.ok(new AttachmentsRestResourceModel(attachmentsService.getUrl(pageId, userKey), "page", userKey)).build();
+            return Response.ok(new AttachmentsRestResourceModel(attachmentsService.getUrl(pageId, userKey), pageId, userKey)).build();
         } catch (SQLException e) {
             log.info(e.getMessage());
             return Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();

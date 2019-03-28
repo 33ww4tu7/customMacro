@@ -1,4 +1,4 @@
-<div class="field-group">
-    <button class="btn">Upload a file</button>
-    <input type="file" name="myfile" onchange="generateUniqueFilname(this);"/>
+<div class="custom-file-btn">
+    <button class="styled-btn">Upload a file</button>
+    <input type="file" name="myfile" accept="image/jpeg, image/png, image/jpg" onchange="generateUniqueFilname(this);"/>
 </div>

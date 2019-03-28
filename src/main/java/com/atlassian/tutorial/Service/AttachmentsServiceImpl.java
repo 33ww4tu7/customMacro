@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Named
 public class AttachmentsServiceImpl implements AttachmentsService {
 
-    private static final String SQL_QUERY = "PAGE_ID = ? AND USER_ID = ?";
+    private static final String SQL_QUERY = "PAGE_ID = ? AND USER_ID = ? ORDER BY ID";
 
     @ComponentImport
     private final ActiveObjects ao;
@@ -24,7 +24,16 @@ public class AttachmentsServiceImpl implements AttachmentsService {
     }
 
     @Override
-    public AttachmentsEntity add(final String path, final String pageId, final String userId) {
+    public AttachmentsEntity createOrUpload(final String path, final String pageId, final String userId) {
+        final AttachmentsEntity[] ae = ao.find(AttachmentsEntity.class, Query.select().where(SQL_QUERY, pageId, userId));
+        if (ae.length == 0) {
+            return create(path, pageId, userId);
+        } else {
+            return upload(ae[0], path);
+        }
+    }
+
+    private AttachmentsEntity create(final String path, final String pageId, final String userId) {
         final AttachmentsEntity attachmentsEntity = ao.create(AttachmentsEntity.class);
         attachmentsEntity.setPath(path);
         attachmentsEntity.setPageId(pageId);
@@ -33,9 +42,18 @@ public class AttachmentsServiceImpl implements AttachmentsService {
         return attachmentsEntity;
     }
 
+    private AttachmentsEntity upload(AttachmentsEntity attachmentsEntity, final String path) {
+        attachmentsEntity.setPath(path);
+        attachmentsEntity.save();
+        return attachmentsEntity;
+    }
+
     @Override
     public String getUrl(final String pageId, final String userId) {
         final AttachmentsEntity[] attachmentsEntity = ao.find(AttachmentsEntity.class, Query.select().where(SQL_QUERY, pageId, userId));
-        return attachmentsEntity[attachmentsEntity.length - 1].getPath();
+        if (attachmentsEntity.length != 0) {
+            return attachmentsEntity[0].getPath();
+        }
+        return "none";
     }
 }

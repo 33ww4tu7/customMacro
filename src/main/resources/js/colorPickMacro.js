@@ -23,7 +23,6 @@ function updateImage(file, uniqueFilename) {
             var lastImage = alldata[alldata.length - 1];
             var link = lastImage._links.download;
             var fullpath = baseUrl + link;
-            setBackgroundImage(fullpath);
             uploadDB(fullpath)
         },
         error: function () {
@@ -38,10 +37,13 @@ function uploadDB(fullpath) {
         type: "POST",
         headers: {
             "path": fullpath,
-            "X-Atlassian-Token": "nocheck",
+            "X-Atlassian-Token": "nocheck"
+        },
+        success: function () {
+            setBackgroundImage(fullpath);
         },
         error: function () {
-            console.log("error while upload information")
+            console.log("error while upload information in database")
         }
     })
 }
@@ -67,8 +69,8 @@ function generateUniqueFilname(input) {
     var extension = filename.split('.').pop();
     AJS.$.ajax({
         url: baseUrl + '/rest/restresource/1.0/attach',
-        headers:{
-          "filename": file
+        headers: {
+            "filename": file
         },
         type: "GET",
         dataType: "text",
@@ -77,12 +79,12 @@ function generateUniqueFilname(input) {
             updateImage(file, uniqueFilename);
         },
         error: function () {
-                console.log("error while generating filename")
+            console.log("error while generating filename")
         }
     })
 }
 
 function setBackgroundImage(path) {
-    $('#main').append('<div class="background-image">');
-    $('.background-image').css({"background-image": "url(" + path + ')'});
+    $('#main').append('<div class="user-background-image">');
+    $('.user-background-image').css({"background-image": "url(" + path + ')'});
 }
