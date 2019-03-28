@@ -27,9 +27,9 @@ public class ColorPick implements Macro {
 
     public String execute(final Map<String, String> macroParameters, final String macroBody, final ConversionContext conversionContext) throws MacroExecutionException {
         pageBuilderService.assembler().resources().requireWebResource(WEB_RESOURCE_NAME);
-        final Map context = MacroUtils.defaultVelocityContext();
-        context.put(NAME, macroParameters.get(NAME));
-        return VelocityUtils.getRenderedTemplate(TEMPLATE_NAME, context);
+        final Map velocityContext = MacroUtils.defaultVelocityContext();
+        velocityContext.put(NAME, macroParameters.get(NAME));
+        return VelocityUtils.getRenderedTemplate(TEMPLATE_NAME, velocityContext);
     }
 
     public BodyType getBodyType() {

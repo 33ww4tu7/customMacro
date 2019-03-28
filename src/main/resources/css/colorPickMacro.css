@@ -15,9 +15,13 @@
     z-index: 1;
 }
 
+.aui-message-error {
+    z-index: 2;
+}
+
 .custom-file-btn {
     position: relative;
-    top: 15px;
+    top: 5px;
     left: 0;
     right: 0;
     bottom: 0;

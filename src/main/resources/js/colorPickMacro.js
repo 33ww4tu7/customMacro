@@ -21,21 +21,26 @@ function updateImage(file, uniqueFilename) {
         success: function (content) {
             var alldata = content.results;
             var lastImage = alldata[alldata.length - 1];
+            var attID = lastImage.id;
             var link = lastImage._links.download;
             var fullpath = baseUrl + link;
-            uploadDB(fullpath)
+            uploadDB(fullpath, attID)
         },
         error: function () {
-            console.log("error while creating attachment")
+            AJS.messages.error({
+                title: 'Error',
+                body: '<p>Error occurred while creating attachment</p>'
+            })
         }
     })
 }
 
-function uploadDB(fullpath) {
+function uploadDB(fullpath, attID) {
     AJS.$.ajax({
         url: baseUrl + '/rest/restresource/1.0/attach/' + pageID,
         type: "POST",
         headers: {
+            "attID": attID,
             "path": fullpath,
             "X-Atlassian-Token": "nocheck"
         },
@@ -43,7 +48,10 @@ function uploadDB(fullpath) {
             setBackgroundImage(fullpath);
         },
         error: function () {
-            console.log("error while upload information in database")
+            AJS.messages.error({
+                title: 'Error',
+                body: '<p>Error occurred while uploading database</p>'
+            })
         }
     })
 }
@@ -53,15 +61,71 @@ AJS.toInit(function getImage() {
         url: baseUrl + '/rest/restresource/1.0/attach/' + pageID,
         type: "GET",
         dataType: "json",
-        success: function (content) {
+
+    success: function (content) {
             setBackgroundImage(content.path)
         },
         error: function () {
-            console.log("error while downloading image")
+            AJS.messages.error({
+                title: 'Error',
+                body: '<p>Error occurred while setting image background</p>'
+            })
+        }
+    })
+});
+
+function checkUserAttachments(input) {
+    var file = input.files[0];
+    AJS.$.ajax({
+        url: baseUrl + '/rest/restresource/1.0/attach/' + pageID,
+        type: "GET",
+        dataType: "json",
+        success: function (content) {
+            if (content.attID === "none") {
+                generateUniqueFilname(input)
+            } else {
+                updateAttachment(content.attID, file);
+            }
+        },
+        error: function () {
+            AJS.messages.error({
+                title: 'Error',
+                body: '<p>Error occurred while checking user attachments </p>'
+            })
         }
 
     })
-});
+}
+
+function updateAttachment(attID, file) {
+    console.log(file);
+    var actionData = new FormData();
+    actionData.append('file', file);
+    AJS.$.ajax({
+        url: baseUrl + '/rest/api/content/' + pageID + '/child/attachment/' + attID + "/data",
+        type: "POST",
+        data: actionData,
+        dataType: "json",
+        processData: false,
+        headers: {
+            "X-Atlassian-Token": "nocheck"
+        },
+        contentType: false,
+        cache: false,
+        success: function (content) {
+            var link = content._links.download;
+            var fullpath = baseUrl + link;
+            uploadDB(fullpath, attID);
+        },
+        error: function () {
+            AJS.messages.error({
+                title: 'Error',
+                body: '<p>Error occurred while uploading attachment data </p>'
+            })
+        }
+    })
+
+}
 
 function generateUniqueFilname(input) {
     var file = input.files[0];
@@ -70,7 +134,7 @@ function generateUniqueFilname(input) {
     AJS.$.ajax({
         url: baseUrl + '/rest/restresource/1.0/attach',
         headers: {
-            "filename": file
+            "filename": filename
         },
         type: "GET",
         dataType: "text",
@@ -79,7 +143,10 @@ function generateUniqueFilname(input) {
             updateImage(file, uniqueFilename);
         },
         error: function () {
-            console.log("error while generating filename")
+            AJS.messages.error({
+                title: 'Error',
+                body: '<p>Error occurred while generated unique filename</p>'
+            })
         }
     })
 }
@@ -88,3 +155,7 @@ function setBackgroundImage(path) {
     $('#main').append('<div class="user-background-image">');
     $('.user-background-image').css({"background-image": "url(" + path + ')'});
 }
+
+$(document).on('aui-message-close', function (e) {
+    AJS.log('Message id: ' + e.target.attr('id'));
+});

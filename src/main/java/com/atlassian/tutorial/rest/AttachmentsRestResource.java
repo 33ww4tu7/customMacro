@@ -2,9 +2,9 @@ package com.atlassian.tutorial.rest;
 
 import com.atlassian.confluence.user.ConfluenceUser;
 import com.atlassian.tutorial.Service.AttachmentsService;
-import com.atlassian.tutorial.Service.AttachmentsServiceImpl;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.http.HttpStatus;
+import org.apache.log4j.Logger;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -12,7 +12,6 @@ import javax.ws.rs.core.Response;
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 import static com.atlassian.confluence.user.AuthenticatedUserThreadLocal.get;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -21,6 +20,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class AttachmentsRestResource {
     private static final Logger log = Logger.getLogger(AttachmentsRestResource.class.getName());
     private final AttachmentsService attachmentsService;
+    private final ConfluenceUser confluenceUser = get();
+    private final String userKey = confluenceUser.getKey().toString();
 
     public AttachmentsRestResource(AttachmentsService attachmentsService) {
         this.attachmentsService = checkNotNull(attachmentsService);
@@ -29,14 +30,12 @@ public class AttachmentsRestResource {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/{pageID}")
-    public Response setAttachment(final @PathParam("pageID") String pageId, final @HeaderParam("path") String path) {
-        final ConfluenceUser confluenceUser = get();
-        final String userKey = confluenceUser.getKey().toString();
+    public Response setAttachment(final @PathParam("pageID") String pageId, final @HeaderParam("path") String path, final @HeaderParam("attID") String attId) {
         try {
-            attachmentsService.createOrUpload(path, pageId, userKey);
+            attachmentsService.createOrUpload(path, pageId, userKey, attId);
             return Response.ok().build();
         } catch (SQLException e) {
-            log.info(e.getMessage());
+            log.error(e.getMessage());
             return Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -44,13 +43,12 @@ public class AttachmentsRestResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/{pageID}")
-    public Response getAttachmentPath(final @PathParam("pageID") String pageId) {
-        final ConfluenceUser confluenceUser = get();
-        final String userKey = confluenceUser.getKey().toString();
+    public Response getUserAttachment(final @PathParam("pageID") String pageId) {
         try {
-            return Response.ok(new AttachmentsRestResourceModel(attachmentsService.getUrl(pageId, userKey), pageId, userKey)).build();
+            return Response.ok(new AttachmentsRestResourceModel(attachmentsService.getUrl(pageId, userKey),
+                    attachmentsService.getAttId(pageId, userKey), pageId, userKey)).build();
         } catch (SQLException e) {
-            log.info(e.getMessage());
+            log.error(e.getMessage());
             return Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
         }
     }

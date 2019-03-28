@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Named
 public class AttachmentsServiceImpl implements AttachmentsService {
 
-    private static final String SQL_QUERY = "PAGE_ID = ? AND USER_ID = ? ORDER BY ID";
+    private static final String SQL_QUERY = "PAGE_ID = ? AND USER_ID = ?";
 
     @ComponentImport
     private final ActiveObjects ao;
@@ -24,36 +24,51 @@ public class AttachmentsServiceImpl implements AttachmentsService {
     }
 
     @Override
-    public AttachmentsEntity createOrUpload(final String path, final String pageId, final String userId) {
+    public AttachmentsEntity createOrUpload(final String path, final String pageId, final String userId, final String attId) {
         final AttachmentsEntity[] ae = ao.find(AttachmentsEntity.class, Query.select().where(SQL_QUERY, pageId, userId));
         if (ae.length == 0) {
-            return create(path, pageId, userId);
+            return create(path, pageId, userId, attId);
         } else {
-            return upload(ae[0], path);
+            return upload(ae[0], path, attId);
         }
     }
 
-    private AttachmentsEntity create(final String path, final String pageId, final String userId) {
+    private AttachmentsEntity create(final String path, final String pageId, final String userId, final String attId) {
         final AttachmentsEntity attachmentsEntity = ao.create(AttachmentsEntity.class);
         attachmentsEntity.setPath(path);
         attachmentsEntity.setPageId(pageId);
         attachmentsEntity.setUserId(userId);
+        attachmentsEntity.setAttId(attId);
         attachmentsEntity.save();
         return attachmentsEntity;
     }
 
-    private AttachmentsEntity upload(AttachmentsEntity attachmentsEntity, final String path) {
+    private AttachmentsEntity upload(AttachmentsEntity attachmentsEntity, final String path, final String attId) {
         attachmentsEntity.setPath(path);
+        attachmentsEntity.setAttId(attId);
         attachmentsEntity.save();
         return attachmentsEntity;
     }
 
     @Override
     public String getUrl(final String pageId, final String userId) {
-        final AttachmentsEntity[] attachmentsEntity = ao.find(AttachmentsEntity.class, Query.select().where(SQL_QUERY, pageId, userId));
+        final AttachmentsEntity[] attachmentsEntity = getEntity(pageId, userId);
         if (attachmentsEntity.length != 0) {
             return attachmentsEntity[0].getPath();
         }
         return "none";
+    }
+
+    @Override
+    public String getAttId(final String pageId, final String userId) {
+        final AttachmentsEntity[] attachmentsEntity = getEntity(pageId, userId);
+        if (attachmentsEntity.length != 0) {
+            return attachmentsEntity[0].getAttId();
+        }
+        return "none";
+    }
+
+    private AttachmentsEntity[] getEntity(final String pageId, final String userId) {
+        return ao.find(AttachmentsEntity.class, Query.select().where(SQL_QUERY, pageId, userId));
     }
 }

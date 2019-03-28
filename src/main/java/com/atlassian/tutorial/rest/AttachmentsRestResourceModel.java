@@ -7,6 +7,8 @@ public class AttachmentsRestResourceModel {
     @JsonProperty
     private String path;
     @JsonProperty
+    private String attID;
+    @JsonProperty
     private String pageID;
     @JsonProperty
     private String userID;
@@ -14,10 +16,11 @@ public class AttachmentsRestResourceModel {
     public AttachmentsRestResourceModel() {
     }
 
-    public AttachmentsRestResourceModel(String path, String pageID, String userID) {
+    public AttachmentsRestResourceModel(String path, String attID, String pageID, String userID) {
         this.userID = userID;
         this.pageID = pageID;
         this.path = path;
+        this.attID = attID;
     }
 
     public String getPath() {
@@ -42,5 +45,13 @@ public class AttachmentsRestResourceModel {
 
     public void setuserID(String userID) {
         this.userID = userID;
+    }
+
+    public String getAttID() {
+        return attID;
+    }
+
+    public void setAttID(String attID) {
+        this.attID = attID;
     }
 }
