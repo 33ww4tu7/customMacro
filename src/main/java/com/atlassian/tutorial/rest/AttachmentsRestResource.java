@@ -2,6 +2,8 @@ package com.atlassian.tutorial.rest;
 
 import com.atlassian.confluence.user.ConfluenceUser;
 import com.atlassian.tutorial.Service.AttachmentsService;
+import com.atlassian.tutorial.entity.AttachmentsEntity;
+import com.sun.jna.platform.win32.Winsvc;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.Logger;
@@ -20,8 +22,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class AttachmentsRestResource {
     private static final Logger log = Logger.getLogger(AttachmentsRestResource.class.getName());
     private final AttachmentsService attachmentsService;
-    private final ConfluenceUser confluenceUser = get();
-    private final String userKey = confluenceUser.getKey().toString();
 
     public AttachmentsRestResource(AttachmentsService attachmentsService) {
         this.attachmentsService = checkNotNull(attachmentsService);
@@ -32,7 +32,7 @@ public class AttachmentsRestResource {
     @Path("/{pageID}")
     public Response setAttachment(final @PathParam("pageID") String pageId, final @HeaderParam("path") String path, final @HeaderParam("attID") String attId) {
         try {
-            attachmentsService.createOrUpload(path, pageId, userKey, attId);
+            attachmentsService.createOrUpload(path, pageId, getUserKey(), attId);
             return Response.ok().build();
         } catch (SQLException e) {
             log.error(e.getMessage());
@@ -44,9 +44,15 @@ public class AttachmentsRestResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/{pageID}")
     public Response getUserAttachment(final @PathParam("pageID") String pageId) {
+        final String userKey = getUserKey();
         try {
-            return Response.ok(new AttachmentsRestResourceModel(attachmentsService.getUrl(pageId, userKey),
-                    attachmentsService.getAttId(pageId, userKey), pageId, userKey)).build();
+            final AttachmentsEntity attachmentsEntity = attachmentsService.getEntity(pageId, userKey);
+            if (attachmentsEntity == null) {
+                return Response.status(HttpStatus.SC_NO_CONTENT).build();
+            } else {
+                return Response.ok(new AttachmentsRestResourceModel(attachmentsEntity.getPath(),
+                        attachmentsEntity.getAttId(), pageId, userKey)).build();
+            }
         } catch (SQLException e) {
             log.error(e.getMessage());
             return Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
@@ -60,5 +66,10 @@ public class AttachmentsRestResource {
         byte[] key = new byte[4];
         random.nextBytes(key);
         return HmacUtils.hmacMd5Hex(Arrays.toString(key), filename);
+    }
+
+    private String getUserKey() {
+        final ConfluenceUser confluenceUser = get();
+        return confluenceUser.getKey().toString();
     }
 }

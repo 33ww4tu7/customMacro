@@ -9,7 +9,5 @@ import java.sql.SQLException;
 public interface AttachmentsService {
     AttachmentsEntity createOrUpload(String path, String pageId, String userId, String attId) throws SQLException;
 
-    String getUrl(String pageId, String userId) throws SQLException;
-
-    String getAttId(String pageId, String userId) throws SQLException;
+    AttachmentsEntity getEntity(String pageId, String userId) throws SQLException;
 }

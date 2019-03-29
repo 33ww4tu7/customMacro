@@ -25,6 +25,7 @@ public class ColorPick implements Macro {
         this.pageBuilderService = pageBuilderService;
     }
 
+    @SuppressWarnings("unchecked")
     public String execute(final Map<String, String> macroParameters, final String macroBody, final ConversionContext conversionContext) throws MacroExecutionException {
         pageBuilderService.assembler().resources().requireWebResource(WEB_RESOURCE_NAME);
         final Map velocityContext = MacroUtils.defaultVelocityContext();

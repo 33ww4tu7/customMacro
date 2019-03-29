@@ -7,6 +7,7 @@ import net.java.ao.Query;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.sql.SQLException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -51,24 +52,7 @@ public class AttachmentsServiceImpl implements AttachmentsService {
     }
 
     @Override
-    public String getUrl(final String pageId, final String userId) {
-        final AttachmentsEntity[] attachmentsEntity = getEntity(pageId, userId);
-        if (attachmentsEntity.length != 0) {
-            return attachmentsEntity[0].getPath();
-        }
-        return "none";
-    }
-
-    @Override
-    public String getAttId(final String pageId, final String userId) {
-        final AttachmentsEntity[] attachmentsEntity = getEntity(pageId, userId);
-        if (attachmentsEntity.length != 0) {
-            return attachmentsEntity[0].getAttId();
-        }
-        return "none";
-    }
-
-    private AttachmentsEntity[] getEntity(final String pageId, final String userId) {
-        return ao.find(AttachmentsEntity.class, Query.select().where(SQL_QUERY, pageId, userId));
+    public AttachmentsEntity getEntity(final String pageId, final String userId) {
+        return ao.find(AttachmentsEntity.class, Query.select().where(SQL_QUERY, pageId, userId))[0];
     }
 }
