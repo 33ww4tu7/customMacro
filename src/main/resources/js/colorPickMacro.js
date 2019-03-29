@@ -27,7 +27,7 @@ function updateImage(file, uniqueFilename) {
             uploadDB(fullpath, attID)
         },
         error: function () {
-            AJS.messages.error({
+            AJS.messages.error("#error-messages",{
                 title: 'Error',
                 body: '<p>Error occurred while creating attachment</p>'
             })
@@ -48,7 +48,7 @@ function uploadDB(fullpath, attID) {
             setBackgroundImage(fullpath);
         },
         error: function () {
-            AJS.messages.error({
+            AJS.messages.error("#error-messages",{
                 title: 'Error',
                 body: '<p>Error occurred while uploading database</p>'
             })
@@ -61,15 +61,17 @@ AJS.toInit(function getImage() {
         url: baseUrl + '/rest/restresource/1.0/attach/' + pageID,
         type: "GET",
         dataType: "json",
+        statusCode: {
+            404: function() {
+                AJS.messages.info("#error-messages",{
+                    title: 'Note!',
+                    body: '<p>You can attach image by clicking "Upload a file" button</p>'
 
-    success: function (content) {
-            setBackgroundImage(content.path)
+                })
+            }
         },
-        error: function () {
-            AJS.messages.error({
-                title: 'Error',
-                body: '<p>Error occurred while setting image background</p>'
-            })
+        success: function (content) {
+            setBackgroundImage(content.path)
         }
     })
 });
@@ -88,7 +90,7 @@ function checkUserAttachments(input) {
             }
         },
         error: function () {
-            AJS.messages.error({
+            AJS.messages.error("#error-messages",{
                 title: 'Error',
                 body: '<p>Error occurred while checking user attachments </p>'
             })
@@ -118,7 +120,7 @@ function updateAttachment(attID, file) {
             uploadDB(fullpath, attID);
         },
         error: function () {
-            AJS.messages.error({
+            AJS.messages.error("#error-messages",{
                 title: 'Error',
                 body: '<p>Error occurred while uploading attachment data </p>'
             })
@@ -143,7 +145,7 @@ function generateUniqueFilname(input) {
             updateImage(file, uniqueFilename);
         },
         error: function () {
-            AJS.messages.error({
+            AJS.messages.error("#error-messages",{
                 title: 'Error',
                 body: '<p>Error occurred while generated unique filename</p>'
             })
@@ -155,7 +157,3 @@ function setBackgroundImage(path) {
     $('#main').append('<div class="user-background-image">');
     $('.user-background-image').css({"background-image": "url(" + path + ')'});
 }
-
-$(document).on('aui-message-close', function (e) {
-    AJS.log('Message id: ' + e.target.attr('id'));
-});

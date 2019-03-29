@@ -52,7 +52,7 @@ public class AttachmentsServiceImpl implements AttachmentsService {
     }
 
     @Override
-    public AttachmentsEntity getEntity(final String pageId, final String userId) {
-        return ao.find(AttachmentsEntity.class, Query.select().where(SQL_QUERY, pageId, userId))[0];
+    public AttachmentsEntity[] getEntity(final String pageId, final String userId) {
+        return ao.find(AttachmentsEntity.class, Query.select().where(SQL_QUERY, pageId, userId));
     }
 }

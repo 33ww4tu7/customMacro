@@ -3,7 +3,6 @@ package com.atlassian.tutorial.rest;
 import com.atlassian.confluence.user.ConfluenceUser;
 import com.atlassian.tutorial.Service.AttachmentsService;
 import com.atlassian.tutorial.entity.AttachmentsEntity;
-import com.sun.jna.platform.win32.Winsvc;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.Logger;
@@ -46,16 +45,17 @@ public class AttachmentsRestResource {
     public Response getUserAttachment(final @PathParam("pageID") String pageId) {
         final String userKey = getUserKey();
         try {
-            final AttachmentsEntity attachmentsEntity = attachmentsService.getEntity(pageId, userKey);
-            if (attachmentsEntity == null) {
-                return Response.status(HttpStatus.SC_NO_CONTENT).build();
+            final AttachmentsEntity[] attachmentsEntity = attachmentsService.getEntity(pageId, userKey);
+            if (attachmentsEntity.length == 0) {
+                return Response.status(HttpStatus.SC_NOT_FOUND).build();
             } else {
-                return Response.ok(new AttachmentsRestResourceModel(attachmentsEntity.getPath(),
-                        attachmentsEntity.getAttId(), pageId, userKey)).build();
+                return Response.ok(new AttachmentsRestResourceModel(attachmentsEntity[0].getPath(),
+                        attachmentsEntity[0].getAttId(), pageId, userKey)).build();
             }
         } catch (SQLException e) {
             log.error(e.getMessage());
             return Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).build();
+
         }
     }
 
