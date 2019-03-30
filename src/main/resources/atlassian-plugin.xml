@@ -8,12 +8,15 @@
     <param name="plugin-icon">images/pluginIcon.png</param>  
     <param name="plugin-logo">images/pluginLogo.png</param> 
   </plugin-info>  
-  <!-- add our i18n resource -->  
-  <resource type="i18n" name="i18n" location="colorPickMacro"/>  
-  <!-- add our web resources -->  
+
+  <resource type="i18n" name="i18n" location="colorPickMacro"/>
+
   <web-resource key="colorPickMacro-resources" name="ColorPickMacro Web Resources">
-    <dependency>com.atlassian.auiplugin:ajs</dependency>  
-    <dependency>com.atlassian.auiplugin:fancy-file-input</dependency>  
+    <transformation extension="js">
+      <transformer key="jsI18n"/>
+    </transformation>
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <dependency>com.atlassian.auiplugin:fancy-file-input</dependency>
     <resource type="download" name="colorPickMacro.css" location="/css/colorPickMacro.css"/>  
     <resource type="download" name="colorPickMacro.js" location="/js/colorPickMacro.js"/>
     <resource type="download" name="images/" location="/images/pluginIcon.png"/>  
@@ -24,7 +27,6 @@
     <description key="colorPick.macro.desc"/>  
     <category name="formatting"/>
     <parameters>
-      <parameter name="Name" type="string"/>
     </parameters>
   </xhtml-macro>  
   <rest name="Attachments Rest Resource" i18n-name-key="attachments-rest-resource.name" key="attachments-rest-resource" path="/restresource" version="1.0">

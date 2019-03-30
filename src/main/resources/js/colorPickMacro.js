@@ -2,7 +2,6 @@ const baseUrl = AJS.params.baseUrl;
 const pageID = AJS.params.pageId;
 
 function updateImage(file, uniqueFilename) {
-    console.log(file);
     var actionData = new FormData();
     actionData.append('file', file, uniqueFilename);
     actionData.append('comment', "foobar");
@@ -21,26 +20,26 @@ function updateImage(file, uniqueFilename) {
         success: function (content) {
             var alldata = content.results;
             var lastImage = alldata[alldata.length - 1];
-            var attID = lastImage.id;
+            var attachmentId = lastImage.id;
             var link = lastImage._links.download;
             var fullpath = baseUrl + link;
-            uploadDB(fullpath, attID)
+            uploadDB(fullpath, attachmentId)
         },
         error: function () {
-            AJS.messages.error("#error-messages",{
-                title: 'Error',
-                body: '<p>Error occurred while creating attachment</p>'
+            AJS.messages.error("#error-messages", {
+                title: AJS.I18n.getText('message.error'),
+                body: AJS.I18n.getText('message.error-while-creating-attachment')
             })
         }
     })
 }
 
-function uploadDB(fullpath, attID) {
+function uploadDB(fullpath, attachmentId) {
     AJS.$.ajax({
         url: baseUrl + '/rest/restresource/1.0/attach/' + pageID,
         type: "POST",
         headers: {
-            "attID": attID,
+            "attachmentId": attachmentId,
             "path": fullpath,
             "X-Atlassian-Token": "nocheck"
         },
@@ -48,9 +47,9 @@ function uploadDB(fullpath, attID) {
             setBackgroundImage(fullpath);
         },
         error: function () {
-            AJS.messages.error("#error-messages",{
-                title: 'Error',
-                body: '<p>Error occurred while uploading database</p>'
+            AJS.messages.error("#error-messages", {
+                title: AJS.I18n.getText('message.error'),
+                body: AJS.I18n.getText('message.error-while-uploading-database'),
             })
         }
     })
@@ -62,10 +61,10 @@ AJS.toInit(function getImage() {
         type: "GET",
         dataType: "json",
         statusCode: {
-            404: function() {
-                AJS.messages.info("#error-messages",{
-                    title: 'Note!',
-                    body: '<p>You can attach image by clicking "Upload a file" button</p>'
+            404: function () {
+                AJS.messages.info("#error-messages", {
+                    title: AJS.I18n.getText('message.note'),
+                    body: AJS.I18n.getText('message.advice')
 
                 })
             }
@@ -83,28 +82,27 @@ function checkUserAttachments(input) {
         type: "GET",
         dataType: "json",
         success: function (content) {
-            if (content.attID === "none") {
+            if (content.attachmentId === "none") {
                 generateUniqueFilname(input)
             } else {
-                updateAttachment(content.attID, file);
+                updateAttachment(content.attachmentId, file);
             }
         },
         error: function () {
-            AJS.messages.error("#error-messages",{
-                title: 'Error',
-                body: '<p>Error occurred while checking user attachments </p>'
+            AJS.messages.error("#error-messages", {
+                title: AJS.I18n.getText('message.error'),
+                body: AJS.I18n.getText('message.error-while-checking-attachments')
             })
         }
-
     })
 }
 
-function updateAttachment(attID, file) {
+function updateAttachment(attachmentId, file) {
     console.log(file);
     var actionData = new FormData();
     actionData.append('file', file);
     AJS.$.ajax({
-        url: baseUrl + '/rest/api/content/' + pageID + '/child/attachment/' + attID + "/data",
+        url: baseUrl + '/rest/api/content/' + pageID + '/child/attachment/' + attachmentId + "/data",
         type: "POST",
         data: actionData,
         dataType: "json",
@@ -117,12 +115,12 @@ function updateAttachment(attID, file) {
         success: function (content) {
             var link = content._links.download;
             var fullpath = baseUrl + link;
-            uploadDB(fullpath, attID);
+            uploadDB(fullpath, attachmentId);
         },
         error: function () {
-            AJS.messages.error("#error-messages",{
-                title: 'Error',
-                body: '<p>Error occurred while uploading attachment data </p>'
+            AJS.messages.error("#error-messages", {
+                title: AJS.I18n.getText('message.error'),
+                body: AJS.I18n.getText('message.error-while-uploading-attachments')
             })
         }
     })
@@ -145,9 +143,9 @@ function generateUniqueFilname(input) {
             updateImage(file, uniqueFilename);
         },
         error: function () {
-            AJS.messages.error("#error-messages",{
-                title: 'Error',
-                body: '<p>Error occurred while generated unique filename</p>'
+            AJS.messages.error("#error-messages", {
+                title: AJS.I18n.getText('message.error'),
+                body: AJS.I18n.getText('message.error-while-generated-filename')
             })
         }
     })

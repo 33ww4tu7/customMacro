@@ -17,7 +17,7 @@ public interface AttachmentsEntity extends Entity {
 
     void setUserId(String userId);
 
-    String getAttId();
+    String getAttachmentId();
 
-    void setAttId(String attId);
+    void setAttachmentId(String attachmentId);
 }

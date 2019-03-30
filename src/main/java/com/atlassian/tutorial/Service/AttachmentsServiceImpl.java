@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Named
 public class AttachmentsServiceImpl implements AttachmentsService {
 
-    private static final String SQL_QUERY = "PAGE_ID = ? AND USER_ID = ?";
+    private static final String QUERY_FOR_GET_USER_ATTACHMENTS = "PAGE_ID = ? AND USER_ID = ?";
 
     @ComponentImport
     private final ActiveObjects ao;
@@ -25,34 +25,34 @@ public class AttachmentsServiceImpl implements AttachmentsService {
     }
 
     @Override
-    public AttachmentsEntity createOrUpload(final String path, final String pageId, final String userId, final String attId) {
-        final AttachmentsEntity[] ae = ao.find(AttachmentsEntity.class, Query.select().where(SQL_QUERY, pageId, userId));
+    public AttachmentsEntity createOrUpload(final String path, final String pageId, final String userId, final String attachmentId) {
+        final AttachmentsEntity[] ae = ao.find(AttachmentsEntity.class, Query.select().where(QUERY_FOR_GET_USER_ATTACHMENTS, pageId, userId));
         if (ae.length == 0) {
-            return create(path, pageId, userId, attId);
+            return create(path, pageId, userId, attachmentId);
         } else {
-            return upload(ae[0], path, attId);
+            return upload(ae[0], path, attachmentId);
         }
     }
 
-    private AttachmentsEntity create(final String path, final String pageId, final String userId, final String attId) {
+    private AttachmentsEntity create(final String path, final String pageId, final String userId, final String attachmentId) {
         final AttachmentsEntity attachmentsEntity = ao.create(AttachmentsEntity.class);
         attachmentsEntity.setPath(path);
         attachmentsEntity.setPageId(pageId);
         attachmentsEntity.setUserId(userId);
-        attachmentsEntity.setAttId(attId);
+        attachmentsEntity.setAttachmentId(attachmentId);
         attachmentsEntity.save();
         return attachmentsEntity;
     }
 
-    private AttachmentsEntity upload(AttachmentsEntity attachmentsEntity, final String path, final String attId) {
+    private AttachmentsEntity upload(AttachmentsEntity attachmentsEntity, final String path, final String attachmentId) {
         attachmentsEntity.setPath(path);
-        attachmentsEntity.setAttId(attId);
+        attachmentsEntity.setAttachmentId(attachmentId);
         attachmentsEntity.save();
         return attachmentsEntity;
     }
 
     @Override
     public AttachmentsEntity[] getEntity(final String pageId, final String userId) {
-        return ao.find(AttachmentsEntity.class, Query.select().where(SQL_QUERY, pageId, userId));
+        return ao.find(AttachmentsEntity.class, Query.select().where(QUERY_FOR_GET_USER_ATTACHMENTS, pageId, userId));
     }
 }

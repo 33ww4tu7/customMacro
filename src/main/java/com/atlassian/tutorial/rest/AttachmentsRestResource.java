@@ -3,6 +3,7 @@ package com.atlassian.tutorial.rest;
 import com.atlassian.confluence.user.ConfluenceUser;
 import com.atlassian.tutorial.Service.AttachmentsService;
 import com.atlassian.tutorial.entity.AttachmentsEntity;
+import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.Logger;
@@ -29,9 +30,9 @@ public class AttachmentsRestResource {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/{pageID}")
-    public Response setAttachment(final @PathParam("pageID") String pageId, final @HeaderParam("path") String path, final @HeaderParam("attID") String attId) {
+    public Response setAttachment(final @PathParam("pageID") String pageId, final @HeaderParam("path") String path, final @HeaderParam("AttachmentId") String attachmentId) {
         try {
-            attachmentsService.createOrUpload(path, pageId, getUserKey(), attId);
+            attachmentsService.createOrUpload(path, pageId, getUserKey(), attachmentId);
             return Response.ok().build();
         } catch (SQLException e) {
             log.error(e.getMessage());
@@ -50,7 +51,7 @@ public class AttachmentsRestResource {
                 return Response.status(HttpStatus.SC_NOT_FOUND).build();
             } else {
                 return Response.ok(new AttachmentsRestResourceModel(attachmentsEntity[0].getPath(),
-                        attachmentsEntity[0].getAttId(), pageId, userKey)).build();
+                        attachmentsEntity[0].getAttachmentId(), pageId, userKey)).build();
             }
         } catch (SQLException e) {
             log.error(e.getMessage());
@@ -65,7 +66,8 @@ public class AttachmentsRestResource {
         final SecureRandom random = new SecureRandom();
         byte[] key = new byte[4];
         random.nextBytes(key);
-        return HmacUtils.hmacMd5Hex(Arrays.toString(key), filename);
+        HmacUtils hmacUtils = new HmacUtils(HmacAlgorithms.HMAC_MD5, key);
+        return hmacUtils.hmacHex(filename);
     }
 
     private String getUserKey() {

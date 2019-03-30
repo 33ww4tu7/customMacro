@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 @Transactional
 public interface AttachmentsService {
-    AttachmentsEntity createOrUpload(String path, String pageId, String userId, String attId) throws SQLException;
+    AttachmentsEntity createOrUpload(String path, String pageId, String userId, String attachmentId) throws SQLException;
 
     AttachmentsEntity[] getEntity(String pageId, String userId) throws SQLException;
 }

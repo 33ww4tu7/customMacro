@@ -6,10 +6,10 @@
 </div>
 <div id="error-messages"></div>
 #else
-<div class="aui-message aui-message-info">
+<div class="aui-message aui-message-error">
     <p class="title">
-        <strong>Error!</strong>
+        <strong>$i18n.getText("message.error")</strong>
     </p>
-    <p>You don't have permissions to attach images</p>
+    <p>$i18n.getText("message.body.no-permissions")</p>
 </div>
 #end
