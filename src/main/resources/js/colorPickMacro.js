@@ -2,13 +2,13 @@ const baseUrl = AJS.params.baseUrl;
 const pageID = AJS.params.pageId;
 const pathToRestResource = '/rest/restresource/1.0/attach/';
 
-function updateImage(file, uniqueFilename) {
-    var actionData = new FormData();
+function createAttachment(file, uniqueFilename) {
+    let actionData = new FormData();
     actionData.append('file', file, uniqueFilename);
     actionData.append('comment', "foobar");
     actionData.append('minorEdit', "true");
     AJS.$.ajax({
-        url: baseUrl + "/rest/api/content/" + pageID+ "/child/attachment",
+        url: `${baseUrl}/rest/api/content/${pageID}/child/attachment`,
         type: "POST",
         data: actionData,
         dataType: "json",
@@ -19,11 +19,11 @@ function updateImage(file, uniqueFilename) {
         contentType: false,
         cache: false,
         success: function (content) {
-            const alldata = content.results;
-            const lastImage = alldata[alldata.length - 1];
-            const attachmentId = lastImage.id;
-            const link = lastImage._links.download;
-            const fullpath = baseUrl + link;
+            let alldata = content.results;
+            let lastImage = alldata[alldata.length - 1];
+            let attachmentId = lastImage.id;
+            let link = lastImage._links.download;
+            let fullpath = baseUrl + link;
             uploadDB(fullpath, attachmentId)
         },
         error: function () {
@@ -77,7 +77,7 @@ AJS.toInit(function getImage() {
 });
 
 function checkUserAttachments(input) {
-    const file = input.files[0];
+    let file = input.files[0];
     AJS.$.ajax({
         url: baseUrl + pathToRestResource + pageID,
         type: "GET",
@@ -95,10 +95,10 @@ function checkUserAttachments(input) {
 
 function updateAttachment(attachmentId, file) {
     console.log(file);
-    const actionData = new FormData();
+    let actionData = new FormData();
     actionData.append('file', file);
     AJS.$.ajax({
-        url: baseUrl + '/rest/api/content/' + pageID + '/child/attachment/' + attachmentId + "/data",
+        url: `${baseUrl}/rest/api/content/${pageID}/child/attachment/${attachmentId}/data`,
         type: "POST",
         data: actionData,
         dataType: "json",
@@ -109,8 +109,8 @@ function updateAttachment(attachmentId, file) {
         contentType: false,
         cache: false,
         success: function (content) {
-            const link = content._links.download;
-            const fullpath = baseUrl + link;
+            let link = content._links.download;
+            let fullpath = baseUrl + link;
             uploadDB(fullpath, attachmentId);
         },
         error: function () {
@@ -124,9 +124,9 @@ function updateAttachment(attachmentId, file) {
 }
 
 function generateUniqueFilname(input) {
-    const file = input.files[0];
-    const filename = input.files[0].name;
-    const extension = filename.split('.').pop();
+    let file = input.files[0];
+    let filename = input.files[0].name;
+    let extension = filename.split('.').pop();
     AJS.$.ajax({
         url: baseUrl + pathToRestResource,
         headers: {
@@ -136,7 +136,7 @@ function generateUniqueFilname(input) {
         dataType: "text",
         success: function (uniqueFilename) {
             uniqueFilename += '.' + extension;
-            updateImage(file, uniqueFilename);
+            createAttachment(file, uniqueFilename);
         },
         error: function () {
             AJS.messages.error("#error-messages", {
