@@ -1,5 +1,6 @@
 const baseUrl = AJS.params.baseUrl;
 const pageID = AJS.params.pageId;
+const pathToRestResource = '/rest/restresource/1.0/attach/';
 
 function updateImage(file, uniqueFilename) {
     var actionData = new FormData();
@@ -7,7 +8,7 @@ function updateImage(file, uniqueFilename) {
     actionData.append('comment', "foobar");
     actionData.append('minorEdit', "true");
     AJS.$.ajax({
-        url: baseUrl + '/rest/api/content/' + pageID + '/child/attachment',
+        url: baseUrl + "/rest/api/content/" + pageID+ "/child/attachment",
         type: "POST",
         data: actionData,
         dataType: "json",
@@ -18,11 +19,11 @@ function updateImage(file, uniqueFilename) {
         contentType: false,
         cache: false,
         success: function (content) {
-            var alldata = content.results;
-            var lastImage = alldata[alldata.length - 1];
-            var attachmentId = lastImage.id;
-            var link = lastImage._links.download;
-            var fullpath = baseUrl + link;
+            const alldata = content.results;
+            const lastImage = alldata[alldata.length - 1];
+            const attachmentId = lastImage.id;
+            const link = lastImage._links.download;
+            const fullpath = baseUrl + link;
             uploadDB(fullpath, attachmentId)
         },
         error: function () {
@@ -36,7 +37,7 @@ function updateImage(file, uniqueFilename) {
 
 function uploadDB(fullpath, attachmentId) {
     AJS.$.ajax({
-        url: baseUrl + '/rest/restresource/1.0/attach/' + pageID,
+        url: baseUrl + pathToRestResource + pageID,
         type: "POST",
         headers: {
             "attachmentId": attachmentId,
@@ -49,7 +50,7 @@ function uploadDB(fullpath, attachmentId) {
         error: function () {
             AJS.messages.error("#error-messages", {
                 title: AJS.I18n.getText('message.error'),
-                body: AJS.I18n.getText('message.error-while-uploading-database'),
+                body: AJS.I18n.getText('message.error-while-uploading-database')
             })
         }
     })
@@ -57,7 +58,7 @@ function uploadDB(fullpath, attachmentId) {
 
 AJS.toInit(function getImage() {
     AJS.$.ajax({
-        url: baseUrl + '/rest/restresource/1.0/attach/' + pageID,
+        url: baseUrl + pathToRestResource + pageID,
         type: "GET",
         dataType: "json",
         statusCode: {
@@ -76,30 +77,25 @@ AJS.toInit(function getImage() {
 });
 
 function checkUserAttachments(input) {
-    var file = input.files[0];
+    const file = input.files[0];
     AJS.$.ajax({
-        url: baseUrl + '/rest/restresource/1.0/attach/' + pageID,
+        url: baseUrl + pathToRestResource + pageID,
         type: "GET",
         dataType: "json",
         success: function (content) {
-            if (content.attachmentId === "none") {
-                generateUniqueFilname(input)
-            } else {
                 updateAttachment(content.attachmentId, file);
-            }
         },
-        error: function () {
-            AJS.messages.error("#error-messages", {
-                title: AJS.I18n.getText('message.error'),
-                body: AJS.I18n.getText('message.error-while-checking-attachments')
-            })
+        statusCode: {
+            404: function() {
+                generateUniqueFilname(input)
+            }
         }
     })
 }
 
 function updateAttachment(attachmentId, file) {
     console.log(file);
-    var actionData = new FormData();
+    const actionData = new FormData();
     actionData.append('file', file);
     AJS.$.ajax({
         url: baseUrl + '/rest/api/content/' + pageID + '/child/attachment/' + attachmentId + "/data",
@@ -113,8 +109,8 @@ function updateAttachment(attachmentId, file) {
         contentType: false,
         cache: false,
         success: function (content) {
-            var link = content._links.download;
-            var fullpath = baseUrl + link;
+            const link = content._links.download;
+            const fullpath = baseUrl + link;
             uploadDB(fullpath, attachmentId);
         },
         error: function () {
@@ -128,11 +124,11 @@ function updateAttachment(attachmentId, file) {
 }
 
 function generateUniqueFilname(input) {
-    var file = input.files[0];
-    var filename = input.files[0].name;
-    var extension = filename.split('.').pop();
+    const file = input.files[0];
+    const filename = input.files[0].name;
+    const extension = filename.split('.').pop();
     AJS.$.ajax({
-        url: baseUrl + '/rest/restresource/1.0/attach',
+        url: baseUrl + pathToRestResource,
         headers: {
             "filename": filename
         },
