@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.security.SecureRandom;
 import java.sql.SQLException;
-import java.util.Arrays;
+
 
 import static com.atlassian.confluence.user.AuthenticatedUserThreadLocal.get;
 import static com.google.common.base.Preconditions.checkNotNull;
