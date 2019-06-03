@@ -1,0 +1,15 @@
+#if ($permissionHelper.canAttachFile($action.remoteUser, $content))
+<div class="custom-file-btn">
+    <button class="styled-btn">Upload a file</button>
+    <input type="file" name="myfile" accept="image/jpeg, image/png, image/jpg"
+           onchange="checkUserAttachments(this);"/>
+</div>
+<div id="error-messages"></div>
+#else
+<div class="aui-message aui-message-error">
+    <p class="title">
+        <strong>$i18n.getText("message.error")</strong>
+    </p>
+    <p>$i18n.getText("message.body.no-permissions")</p>
+</div>
+#end
